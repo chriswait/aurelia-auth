@@ -3,6 +3,9 @@ declare module 'aurelia-auth' {
     inject
   } from 'aurelia-dependency-injection';
   import {
+    Cookies
+  } from 'cookies-js';
+  import {
     HttpClient,
     json
   } from 'aurelia-fetch-client';
@@ -41,6 +44,11 @@ declare module 'aurelia-auth' {
     pollPopup(): any;
     prepareOptions(options: any): any;
     stringifyOptions(options: any): any;
+  }
+  export class CookieStorage {
+    getItem(key: any): any;
+    setItem(key: any, value: any): any;
+    removeItem(key: any): any;
   }
   export class Storage {
     constructor(config: any);

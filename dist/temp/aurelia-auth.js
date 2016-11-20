@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.AuthService = exports.OAuth2 = exports.AuthorizeStep = exports.FetchConfig = exports.OAuth1 = exports.Authentication = exports.Storage = exports.Popup = exports.BaseConfig = exports.AuthFilterValueConverter = undefined;
+exports.AuthService = exports.OAuth2 = exports.AuthorizeStep = exports.FetchConfig = exports.OAuth1 = exports.Authentication = exports.Storage = exports.CookieStorage = exports.Popup = exports.BaseConfig = exports.AuthFilterValueConverter = undefined;
 
 var _dec, _class, _dec2, _class2, _dec3, _class3, _dec4, _class4, _dec5, _class5, _dec6, _class6, _dec7, _class7, _dec8, _class8;
 
@@ -27,6 +27,8 @@ exports.merge = merge;
 exports.forEach = forEach;
 
 var _aureliaDependencyInjection = require('aurelia-dependency-injection');
+
+var _cookiesJs = require('cookies-js');
 
 var _aureliaFetchClient = require('aurelia-fetch-client');
 
@@ -535,12 +537,38 @@ var Popup = exports.Popup = (_dec = (0, _aureliaDependencyInjection.inject)(Base
 
   return Popup;
 }()) || _class);
+
+var CookieStorage = exports.CookieStorage = function () {
+  function CookieStorage() {
+    _classCallCheck(this, CookieStorage);
+  }
+
+  CookieStorage.prototype.getItem = function getItem(key) {
+    var result = _cookiesJs.Cookies.get(key);
+    if (typeof result === 'undefined') {
+      result = null;
+    }
+    return result;
+  };
+
+  CookieStorage.prototype.setItem = function setItem(key, value) {
+    return _cookiesJs.Cookies.set(key, value);
+  };
+
+  CookieStorage.prototype.removeItem = function removeItem(key) {
+    return _cookiesJs.Cookies.expire(key);
+  };
+
+  return CookieStorage;
+}();
+
 var Storage = exports.Storage = (_dec2 = (0, _aureliaDependencyInjection.inject)(BaseConfig), _dec2(_class2 = function () {
   function Storage(config) {
     _classCallCheck(this, Storage);
 
     this.config = config.current;
-    this.storage = this._getStorage(this.config.storage);
+    this.type = this.config.storage;
+    this.storage = this._getStorage();
   }
 
   Storage.prototype.get = function get(key) {
@@ -555,16 +583,17 @@ var Storage = exports.Storage = (_dec2 = (0, _aureliaDependencyInjection.inject)
     return this.storage.removeItem(key);
   };
 
-  Storage.prototype._getStorage = function _getStorage(type) {
-    if (type === 'localStorage') {
+  Storage.prototype._getStorage = function _getStorage() {
+    if (this.type === 'localStorage') {
       if ('localStorage' in window && window.localStorage !== null) return localStorage;
       throw new Error('Local Storage is disabled or unavailable.');
-    } else if (type === 'sessionStorage') {
+    } else if (this.type === 'sessionStorage') {
       if ('sessionStorage' in window && window.sessionStorage !== null) return sessionStorage;
       throw new Error('Session Storage is disabled or unavailable.');
+    } else if (this.type === 'cookies') {
+      return new CookieStorage();
     }
-
-    throw new Error('Invalid storage type specified: ' + type);
+    throw new Error('Invalid storage type specified: ' + this.type);
   };
 
   return Storage;
