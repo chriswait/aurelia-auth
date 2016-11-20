@@ -73,19 +73,17 @@ describe('Storage - cookies', () => {
   it('successfully initialises using cookies', () => {
     let container = new Container();
     let config = new BaseConfig();
-    let type = 'cookies'
+    let type = 'cookies';
     config.configure({storage: type});
     container.registerInstance(BaseConfig, config);
-    let storage;
     expect(() => {
-      storage = container.get(Storage);
+      container.get(Storage);
     }).not.toThrow();
   });
-  /*
   it('stores and retrieves values using cookies', () => {
     let container = new Container();
     let config = new BaseConfig();
-    let type = 'cookies'
+    let type = 'cookies';
     config.configure({storage: type});
     container.registerInstance(BaseConfig, config);
     let storage = container.get(Storage);
@@ -93,14 +91,14 @@ describe('Storage - cookies', () => {
     expect(storage.get(key)).toBe(value);
   });
   it('removes items using cookies', () => {
-    let container = new container();
-    let config = new baseconfig();
-    config.configure({storage: 'cookies'});
-    container.registerinstance(baseconfig, config);
-    let storage = container.get(storage);
+    let container = new Container();
+    let config = new BaseConfig();
+    let type = 'cookies';
+    config.configure({storage: type});
+    container.registerInstance(BaseConfig, config);
+    let storage = container.get(Storage);
     storage.set(key, value);
     storage.remove(key);
-    expect(storage.get(key)).tobe(null);
+    expect(storage.get(key)).toBe(null);
   });
-  */
 });
